@@ -15,17 +15,15 @@ func NewReadCloser(rc io.ReadCloser) *ReadCloser {
 type ReadCloser struct {
 	io.ReadCloser
 
-	count uint64
+	count atomic.Uint64
 }
 
 var _ io.ReadCloser = (*ReadCloser)(nil)
 
 func (self *ReadCloser) Read(p []byte) (int, error) {
 	n, err := self.ReadCloser.Read(p)
-	atomic.AddUint64(&self.count, uint64(n))
+	self.count.Add(uint64(n))
 	return n, err //nolint:wrapcheck // not needed
 }
 
-func (self *ReadCloser) Count() uint64 {
-	return atomic.LoadUint64(&self.count)
-}
+func (self *ReadCloser) Count() uint64 { return self.count.Load() }
