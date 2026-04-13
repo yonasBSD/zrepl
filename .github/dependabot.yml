@@ -9,10 +9,19 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 5
+
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 5
+    groups:
+      "gomod":
+        patterns: [ "*" ]
+
   # Docs use Python only for static site generation.
   - package-ecosystem: "pip"
     directory: /docs
